@@ -18,7 +18,7 @@ logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
 def main():
     try:
-        html = urlopen("https://en.wikipedia.org/wiki/Hillsboro_Hops")
+        html = urlopen("https://en.wikipedia.org/wiki/Portland_Beavers")
     except HTTPError as e:
         print(e)
         return
@@ -26,17 +26,10 @@ def main():
         print("URL is not found")
         return
     bsObj = BeautifulSoup(html, "html.parser")
-    # links = bsObj.findAll(re.compile('.*http$'))
-    links = bsObj.findAll("a")
-    # tag.name for each_link in links:
-    #    print("Link =", each_link)
-    for link in bsObj.find("a"): # ,href=re.compile(".*http$"))
+    for link in bsObj.find("div", {"id":"bodyContent"}).findAll("a",
+                            href=re.compile("^(/wiki/)((?!:).)*$")):
         if 'href' in link.attrs:
             print(link.attrs['href'])
-    # links = bsObj.findAll("a",href=re.compile("^(/wiki/)((?!:).)*$"))
-    # for each_link in links:
-    #     if 'href' in each_link.attrs:
-    #         print(each_link.attrs['href'])
 
 
 main()
